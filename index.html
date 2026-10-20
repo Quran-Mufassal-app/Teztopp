@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ToptanAdım</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#0c0b0e; --surface:#18161c; --surface2:#232029; --line:#2e2a35;
+  --fg:#f3f0f5; --muted:#9a93a3; --accent:#e8b04a; --accent-ink:#1c1406; --danger:#ff6b6b;
+  --display:"Unbounded","Manrope",system-ui,sans-serif;
+  --body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:var(--body);font-size:15px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+img{max-width:100%}
+[hidden]{display:none!important}
+.wrap{padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-block:0 120px;max-width:900px;margin:0 auto}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding-block:14px 10px}
+.brand h1{font-family:var(--display);font-weight:700;font-size:20px;margin:0}
+.brand h1 span{color:var(--accent)}
+.brand small{color:var(--muted);font-size:12px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-top:12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:transparent;color:var(--fg);padding:7px 14px;border-radius:999px;font:600 13px var(--body);cursor:pointer}
+.chip.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.masonry{display:flex;gap:10px;align-items:flex-start}
+.col{flex:1;min-width:0;display:flex;flex-direction:column;gap:14px}
+.pin{cursor:pointer}
+.pin .img{position:relative;border-radius:18px;overflow:hidden;background:var(--surface)}
+.pin img{display:block;width:100%;height:auto}
+.price{position:absolute;left:8px;bottom:8px;background:rgba(12,11,14,.78);backdrop-filter:blur(6px);padding:3px 9px;border-radius:999px;font:700 12px var(--body);font-variant-numeric:tabular-nums}
+.heart{position:absolute;right:8px;top:8px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(12,11,14,.6);color:#fff;display:grid;place-items:center;cursor:pointer}
+.heart.on{color:var(--danger)}
+.meta{display:flex;align-items:center;gap:8px;padding:8px 4px 0}
+.meta div{min-width:0}
+.meta b{font-size:13px;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meta small{color:var(--muted);font-size:12px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ava{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:700 11px var(--display);color:var(--accent-ink);background:var(--accent)}
+.dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;z-index:20}
+.dock button{width:64px;height:58px;border-radius:20px;border:0;background:var(--surface2);color:var(--fg);display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.5)}
+.dock button.on{background:var(--fg);color:var(--bg)}
+.dock svg{width:26px;height:26px}
+.search{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-top:4px}
+.search input{flex:1;min-width:0;background:transparent;border:0;color:var(--fg);font:500 15px var(--body);outline:none}
+h2{font-family:var(--display);font-size:17px;font-weight:500;margin:22px 0 12px}
+.empty{color:var(--muted);text-align:center;padding:40px 16px}
+.more{text-align:center;color:var(--muted);padding:20px;font-size:13px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.field label{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.field input,.field select{background:var(--surface2);border:1px solid var(--line);color:var(--fg);border-radius:12px;padding:12px;font:500 16px var(--body);width:100%}
+.field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:block;text-align:center;text-decoration:none;border:0;border-radius:14px;padding:13px 18px;font:700 15px var(--body);cursor:pointer;background:var(--accent);color:var(--accent-ink);width:100%}
+.btn:disabled{opacity:.55}
+.btn.ghost{background:var(--surface2);color:var(--fg)}
+.btn.small{display:inline-block;width:auto;padding:9px 14px;font-size:13px}
+.prof{display:flex;align-items:center;gap:14px}
+.prof .ava{width:62px;height:62px;font-size:22px}
+.prof h3{font-family:var(--display);font-size:18px;margin:0 0 2px;font-weight:700}
+.prof p{margin:0;color:var(--muted);font-size:13px}
+.stats{display:flex;gap:18px;margin:16px 0;font-size:13px;color:var(--muted)}
+.stats b{display:block;color:var(--fg);font-size:18px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.drop{border:2px dashed var(--line);border-radius:16px;min-height:150px;display:grid;place-items:center;text-align:center;color:var(--muted);cursor:pointer;overflow:hidden;position:relative}
+.drop img{width:100%;max-height:300px;object-fit:cover}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);width:100%;max-width:560px;max-height:94%;overflow:auto;border-radius:24px 24px 0 0;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:.6}}
+@media (prefers-reduced-motion:reduce){.sheet{animation:none}}
+.hero{position:relative;background:var(--surface2)}
+.hero img{display:block;width:100%;height:auto}
+.close{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(12,11,14,.7);color:#fff;font-size:20px;cursor:pointer}
+.body{padding:18px 18px 0}
+.sheet h3{font-family:var(--display);font-size:20px;margin:0 0 6px;font-weight:700}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 16px}
+.tag{background:var(--surface2);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600}
+.maker{display:flex;align-items:center;gap:12px;background:var(--surface2);border-radius:16px;padding:12px;margin-bottom:14px}
+.maker .ava{width:44px;height:44px;font-size:16px}
+.maker div{min-width:0;flex:1}
+.maker b{display:block}
+.maker small{color:var(--muted)}
+.phone{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:10px}
+.phone span{font:700 16px var(--body);font-variant-numeric:tabular-nums;user-select:all}
+.stack{display:flex;flex-direction:column;gap:10px}
+.mini{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.mini img{width:90px;height:110px;object-fit:cover;border-radius:12px;flex:none;cursor:pointer}
+.mine{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mine .it{position:relative}
+.mine img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:12px;display:block}
+.del{position:absolute;top:6px;right:6px;border:0;border-radius:8px;background:rgba(12,11,14,.75);color:var(--danger);font:700 11px var(--body);padding:4px 7px;cursor:pointer}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:700;font-size:14px;z-index:40;max-width:90%}
+.note{font-size:12px;color:var(--muted);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><h1>Toptan<span>Adım</span></h1><small>Üreticiden toptancıya ayakkabı</small></div>
+    <div class="chips" id="chips"></div>
+  </header>
+
+  <section id="v-home">
+    <div class="masonry" id="feed"></div>
+    <div class="more" id="feedMore">Yükleniyor…</div>
+  </section>
+
+  <section id="v-search" hidden>
+    <div class="search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      <input id="q" type="search" placeholder="Model, üretici veya şehir ara" enterkeyhint="search">
+    </div>
+    <h2 id="sTitle">Beğendiklerim</h2>
+    <div class="masonry" id="sfeed"></div>
+    <p class="empty" id="sEmpty" hidden></p>
+  </section>
+
+  <section id="v-profile" hidden><div id="prof"><p class="more">Yükleniyor…</p></div></section>
+</div>
+
+<nav class="dock">
+  <button id="t-home" class="on" aria-label="Ana sayfa"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 3 10v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-9z"/></svg></button>
+  <button id="t-search" aria-label="Ara"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button>
+  <button id="t-profile" aria-label="Profil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg></button>
+</nav>
+<div id="sheetRoot"></div>
+
+<script>
+// ================== AYARLAR — sadece burayı değiştir ==================
+const CONFIG = {
+  SUPABASE_URL: "https://sophlowcdojamdheiztu.supabase.co",
+  SUPABASE_KEY: "sb_publishable_3T5UdX9KsZDgkYi_5DWM0A_YtMm0AYZ"   // Publishable (anon) key
+};
+// ======================================================================
+
+const API = CONFIG.SUPABASE_URL + "/functions/v1/api";
+const tg = window.Telegram && window.Telegram.WebApp;
+const ME = tg && tg.initDataUnsafe && tg.initDataUnsafe.user || null;
+if (tg) { tg.ready(); tg.expand(); try { tg.setHeaderColor("#0c0b0e"); tg.setBackgroundColor("#0c0b0e"); } catch (e) {} }
+
+const CATS = ["Hepsi","Bebek","Çocuk","Kadın","Erkek","Spor"];
+const PAGE = 24;
+const SEL = "select=id,name,category,price,min_order,sizes,img_small,img_large,img_w,img_h,maker_id,created_at,makers(id,name,city,phone,tg_username)";
+const cache = new Map();
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ini = n => String(n||"?").trim().split(/\s+/).map(w=>w[0]).join("").slice(0,2).toUpperCase();
+const haptic = () => { try { tg.HapticFeedback.impactOccurred("light"); } catch (e) {} };
+
+function toast(t){ const d=document.createElement("div"); d.className="toast"; d.textContent=t; document.body.appendChild(d); setTimeout(()=>d.remove(),2200); }
+
+async function rest(path){
+  const r = await fetch(CONFIG.SUPABASE_URL + "/rest/v1/" + path, { headers: { apikey: CONFIG.SUPABASE_KEY } });
+  if (!r.ok) throw new Error("Bağlantı hatası (" + r.status + ")");
+  return r.json();
+}
+async function api(fd){
+  const r = await fetch(API, { method:"POST", headers:{ "x-init-data": tg ? tg.initData : "", apikey: CONFIG.SUPABASE_KEY }, body: fd });
+  const d = await r.json().catch(()=>({}));
+  if (!r.ok) throw new Error(d.error || "Sunucu hatası (" + r.status + ")");
+  return d;
+}
+const remember = list => { list.forEach(p => cache.set(p.id, p)); return list; };
+
+// ---------- Beğeniler (Telegram bulutunda saklanır) ----------
+const useCloud = !!(tg && tg.CloudStorage && tg.isVersionAtLeast && tg.isVersionAtLeast("6.9"));
+let favs = [];
+function loadFavs(){ return new Promise(res => {
+  if (useCloud) tg.CloudStorage.getItem("favs", (e,v) => { try { favs = JSON.parse(v || "[]"); } catch (x) { favs = []; } res(); });
+  else { try { favs = JSON.parse(localStorage.getItem("favs") || "[]"); } catch (x) { favs = []; } res(); }
+});}
+function saveFavs(){ favs = favs.slice(-100); const s = JSON.stringify(favs);
+  if (useCloud) tg.CloudStorage.setItem("favs", s); else { try { localStorage.setItem("favs", s); } catch (e) {} } }
+
+// ---------- Masonry (her yeni kart en kısa sütuna) ----------
+function Masonry(el){
+  const n = innerWidth >= 640 ? 3 : 2;
+  el.innerHTML = ""; const cols = [], h = [];
+  for (let i=0;i<n;i++){ const c=document.createElement("div"); c.className="col"; el.appendChild(c); cols.push(c); h.push(0); }
+  return { add(p){ const i = h.indexOf(Math.min(...h)); cols[i].insertAdjacentHTML("beforeend", pinHTML(p)); h[i] += (p.img_h && p.img_w ? p.img_h/p.img_w : 1.3) + 0.25; },
+           clear(){ cols.forEach(c=>c.innerHTML=""); h.fill(0); } };
+}
+function pinHTML(p){
+  const m = p.makers || {}; const f = favs.includes(p.id);
+  return `<article class="pin" data-id="${p.id}">
+    <div class="img"><img src="${esc(p.img_small)}" ${p.img_w?`width="${p.img_w}" height="${p.img_h}"`:""} alt="${esc(p.name)}" loading="lazy" decoding="async">
+      ${p.price?`<span class="price">${esc(p.price)} so'm</span>`:""}
+      <button class="heart ${f?"on":""}" data-fav="${p.id}" aria-label="Beğen"><svg width="18" height="18" viewBox="0 0 24 24" fill="${f?"currentColor":"none"}" stroke="currentColor" stroke-width="2"><path d="M12 21s-8-5.3-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.7-8 11-8 11z"/></svg></button></div>
+    <div class="meta"><span class="ava">${esc(ini(m.name))}</span><div><b>${esc(p.name)}</b><small>${esc(m.name)}${m.city?" · "+esc(m.city):""}</small></div></div>
+  </article>`;
+}
+
+// ---------- Ana akış ----------
+let cat = "Hepsi", off = 0, busy = false, done = false, feedM = null, gen = 0;
+function renderChips(){ $("chips").innerHTML = CATS.map(c=>`<button class="chip ${c===cat?"on":""}" data-c="${c}">${c}</button>`).join(""); }
+async function loadFeed(reset){
+  if (reset){ gen++; off=0; done=false; busy=false; feedM = Masonry($("feed")); }
+  if (!feedM || busy || done) return; busy = true; $("feedMore").textContent = "Yükleniyor…";
+  const my = gen;
+  try{
+    let q = `products?${SEL}&order=created_at.desc&limit=${PAGE}&offset=${off}`;
+    if (cat !== "Hepsi") q += `&category=eq.${encodeURIComponent(cat)}`;
+    const list = remember(await rest(q));
+    if (my !== gen) return;
+    list.forEach(p => feedM.add(p)); off += list.length;
+    if (list.length < PAGE) done = true;
+    $("feedMore").textContent = done ? (off ? "Hepsi bu kadar" : "Bu kategoride henüz model yok.") : "";
+  }catch(e){ $("feedMore").textContent = e.message + " — tekrar denemek için dokun"; }
+  busy = false;
+}
+new IntersectionObserver(es => { if (es[0].isIntersecting && !$("v-home").hidden) loadFeed(false); }, { rootMargin:"600px" }).observe($("feedMore"));
+$("feedMore").onclick = () => loadFeed(false);
+
+// ---------- Arama ----------
+let sTimer;
+async function renderSearch(){
+  const raw = $("q").value.trim(); const q = raw.replace(/[,()*%\\."']/g," ").trim();
+  const m = Masonry($("sfeed")); $("sEmpty").hidden = true;
+  try{
+    let list = [];
+    if (!q){
+      $("sTitle").textContent = "Beğendiklerim";
+      if (favs.length) list = remember(await rest(`products?${SEL}&id=in.(${favs.join(",")})&order=created_at.desc`));
+      if (!list.length){ $("sEmpty").textContent = "Beğendiğin modeller burada görünür. Kalbe dokun."; $("sEmpty").hidden = false; }
+    } else {
+      const like = encodeURIComponent(`*${q}*`);
+      const ms = await rest(`makers?select=id&or=(name.ilike.${like},city.ilike.${like})&limit=50`);
+      const ors = [`name.ilike.${like}`, `category.ilike.${like}`];
+      if (ms.length) ors.push(`maker_id.in.(${ms.map(x=>x.id).join(",")})`);
+      list = remember(await rest(`products?${SEL}&or=(${ors.join(",")})&order=created_at.desc&limit=60`));
+      $("sTitle").textContent = list.length + " sonuç";
+      if (!list.length){ $("sEmpty").textContent = "Eşleşen model bulunamadı."; $("sEmpty").hidden = false; }
+    }
+    list.forEach(p => m.add(p));
+  }catch(e){ $("sEmpty").textContent = e.message; $("sEmpty").hidden = false; }
+}
+$("q").addEventListener("input", () => { clearTimeout(sTimer); sTimer = setTimeout(renderSearch, 350); });
+
+// ---------- Alt pencere (detay, formlar) ----------
+function sheet(html){
+  $("sheetRoot").innerHTML = `<div class="sheet-bg" id="sbg"><div class="sheet" role="dialog">${html}</div></div>`;
+  $("sbg").addEventListener("click", e => { if (e.target.id==="sbg" || e.target.closest("[data-close]")) closeSheet(); });
+  if (tg) { tg.BackButton.show(); }
+}
+function closeSheet(){ $("sheetRoot").innerHTML = ""; if (tg) tg.BackButton.hide(); }
+if (tg) tg.BackButton.onClick(closeSheet);
+
+async function openProduct(id){
+  const p = cache.get(id); if (!p) return;
+  const m = p.makers || {};
+  const tgName = (m.tg_username||"").replace(/^@/,"");
+  sheet(`<div class="hero"><img src="${esc(p.img_large)}" ${p.img_w?`width="${p.img_w}" height="${p.img_h}"`:""} alt=""><button class="close" data-close aria-label="Kapat">×</button></div>
+  <div class="body">
+    <h3>${esc(p.name)}</h3>
+    <div class="tags">${p.price?`<span class="tag">${esc(p.price)} so'm / çift</span>`:""}${p.min_order?`<span class="tag">Min. ${esc(p.min_order)} çift</span>`:""}${p.sizes?`<span class="tag">Numara ${esc(p.sizes)}</span>`:""}<span class="tag">${esc(p.category)}</span></div>
+    <div class="maker"><span class="ava">${esc(ini(m.name))}</span><div><b>${esc(m.name)}</b><small>${esc(m.city||"")}</small></div></div>
+    <div class="phone"><span id="ph">${esc(m.phone)}</span><button class="btn ghost small" id="copy">Kopyala</button></div>
+    <div class="stack">
+      ${tgName?`<button class="btn" id="writeTg">Telegram'dan yaz · @${esc(tgName)}</button>`:""}
+      <a class="btn ghost" href="tel:${esc(String(m.phone||"").replace(/[^\d+]/g,""))}">Ara</a>
+    </div>
+    <div id="others"></div>
+  </div>`);
+  $("copy").onclick = async () => {
+    try { await navigator.clipboard.writeText(m.phone); toast("Numara kopyalandı"); }
+    catch (e) { const r=document.createRange(); r.selectNodeContents($("ph")); const s=getSelection(); s.removeAllRanges(); s.addRange(r); toast("Numara seçildi, kopyalayabilirsin"); }
+  };
+  if (tgName) $("writeTg").onclick = () => { const u = "https://t.me/" + encodeURIComponent(tgName); if (tg) tg.openTelegramLink(u); else open(u, "_blank"); };
+  try{
+    const others = remember(await rest(`products?${SEL}&maker_id=eq.${p.maker_id}&id=neq.${p.id}&order=created_at.desc&limit=12`));
+    if (others.length && $("others")) $("others").innerHTML = `<h2>Bu üreticinin diğer modelleri</h2><div class="mini">${others.map(o=>`<img src="${esc(o.img_small)}" data-open="${o.id}" alt="${esc(o.name)}" loading="lazy">`).join("")}</div>`;
+  }catch(e){}
+}
+
+// ---------- Profil ----------
+let myMaker = null, myProducts = [];
+async function renderProfile(){
+  const el = $("prof");
+  if (!ME){
+    el.innerHTML = `<h2>Üretici girişi</h2><div class="card"><p style="margin:0;color:var(--muted)">Üretici profili Telegram hesabınla açılır. Bu sayfayı botun içinden aç.</p></div>${buyerCard()}`;
+    return;
+  }
+  try{
+    const r = await rest(`makers?id=eq.${ME.id}`); myMaker = r[0] || null;
+  }catch(e){ el.innerHTML = `<p class="empty">${esc(e.message)}</p>`; return; }
+
+  if (!myMaker){
+    el.innerHTML = `<h2>Üretici misin?</h2>
+    <div class="card">
+      <p style="margin:0 0 14px;color:var(--muted)">Profilini aç, modellerinin fotoğraflarını yükle. Toptancılar ana sayfada görüp seninle doğrudan iletişime geçsin.</p>
+      ${makerForm({ name: [ME.first_name, ME.last_name].filter(Boolean).join(" "), tg_username: ME.username })}
+      <button class="btn" id="saveMaker">Profili oluştur</button>
+    </div>${buyerCard()}`;
+    $("saveMaker").onclick = () => submitMaker($("saveMaker"));
+    return;
+  }
+  myProducts = remember(await rest(`products?${SEL}&maker_id=eq.${ME.id}&order=created_at.desc`).catch(()=>[]));
+  const m = myMaker;
+  el.innerHTML = `<div class="card" style="margin-top:6px">
+    <div class="prof"><span class="ava">${esc(ini(m.name))}</span><div><h3>${esc(m.name)}</h3><p>${esc(m.city||"")} · ${esc(m.phone)}${m.tg_username?" · @"+esc(m.tg_username):""}</p></div></div>
+    <div class="stats"><div><b>${myProducts.length}</b>model</div></div>
+    <div class="actions"><button class="btn small" id="addP">+ Model ekle</button><button class="btn ghost small" id="editM">Profili düzenle</button></div>
+  </div>
+  <h2>Modellerim</h2>
+  ${myProducts.length ? `<div class="mine">${myProducts.map(p=>`<div class="it"><img src="${esc(p.img_small)}" data-open="${p.id}" alt="${esc(p.name)}" loading="lazy"><button class="del" data-del="${p.id}">Sil</button></div>`).join("")}</div>` : `<p class="empty">Henüz model yüklemedin. İlk fotoğrafı ekle.</p>`}`;
+  $("addP").onclick = openAdd;
+  $("editM").onclick = () => {
+    sheet(`<div class="body"><div style="display:flex;justify-content:space-between;align-items:center"><h3>Profili düzenle</h3><button class="btn ghost small" data-close>Kapat</button></div>${makerForm(m)}<button class="btn" id="upd">Kaydet</button></div>`);
+    $("upd").onclick = () => submitMaker($("upd"), true);
+  };
+}
+function buyerCard(){ return `<h2>Toptan alıcıysan</h2><div class="card"><p style="margin:0;color:var(--muted)">Profil açmana gerek yok. Beğendiğin modele dokun; üreticinin numarası ve Telegram'ı açılır. Kalbe bastıkların Arama sekmesinde saklanır.</p></div>`; }
+function makerForm(m){ return `
+  <div class="field"><label for="mn">Firma / atölye adı</label><input id="mn" maxlength="60" value="${esc(m.name||"")}" placeholder="Örn. Nurli Qadam"></div>
+  <div class="row2">
+    <div class="field"><label for="mp">Telefon</label><input id="mp" type="tel" maxlength="30" value="${esc(m.phone||"")}" placeholder="+998 90 000 00 00"></div>
+    <div class="field"><label for="mc">Şehir</label><input id="mc" maxlength="40" value="${esc(m.city||"")}" placeholder="Toshkent"></div>
+  </div>
+  <div class="field"><label for="mt">Telegram kullanıcı adı</label><input id="mt" maxlength="33" value="${esc(m.tg_username||"")}" placeholder="kullaniciadi"></div>`; }
+async function submitMaker(btn, inSheet){
+  const fd = new FormData();
+  fd.append("action","save_profile");
+  fd.append("name",$("mn").value.trim()); fd.append("phone",$("mp").value.trim());
+  fd.append("city",$("mc").value.trim()); fd.append("tg_username",$("mt").value.trim());
+  if (!fd.get("name") || !fd.get("phone")) { toast("Ad ve telefon gerekli"); return; }
+  btn.disabled = true; btn.textContent = "Kaydediliyor…";
+  try { await api(fd); if (inSheet) closeSheet(); toast("Kaydedildi"); renderProfile(); loadFeed(true); }
+  catch (e) { toast(e.message); btn.disabled = false; btn.textContent = "Tekrar dene"; }
+}
+
+// ---------- Model ekleme + fotoğraf küçültme ----------
+let draft = null;
+function loadImg(file){ return new Promise((res,rej)=>{ const u=URL.createObjectURL(file); const i=new Image(); i.onload=()=>res(i); i.onerror=()=>rej(new Error("Fotoğraf açılamadı")); i.src=u; }); }
+function toJpeg(img, w, h, q){ const c=document.createElement("canvas"); c.width=w; c.height=h; const x=c.getContext("2d"); x.fillStyle="#fff"; x.fillRect(0,0,w,h); x.drawImage(img,0,0,w,h); return new Promise(r=>c.toBlob(r,"image/jpeg",q)); }
+async function makeVersions(file){
+  const img = await loadImg(file);
+  const W = img.naturalWidth, H = img.naturalHeight;
+  const sl = Math.min(1, 1440 / Math.max(W,H));            // büyük: uzun kenar 1440 px
+  const lw = Math.round(W*sl), lh = Math.round(H*sl);
+  const ss = Math.min(1, 480 / W);                           // küçük: genişlik 480 px
+  const sw = Math.round(W*ss), sh = Math.round(H*ss);
+  let large = await toJpeg(img, lw, lh, .82);
+  if (large.size > 1_900_000) large = await toJpeg(img, lw, lh, .65);
+  const small = await toJpeg(img, sw, sh, .74);
+  URL.revokeObjectURL(img.src);
+  return { large, small, w: sw, h: sh };
+}
+function openAdd(){
+  draft = null;
+  sheet(`<div class="body"><div style="display:flex;justify-content:space-between;align-items:center"><h3>Yeni model</h3><button class="btn ghost small" data-close>Kapat</button></div>
+    <div class="field"><label>Fotoğraf</label><div class="drop" id="drop"><span id="dropTxt">Fotoğraf seç veya çek</span><input id="file" type="file" accept="image/*"></div><p class="note" id="sizeNote"></p></div>
+    <div class="field"><label for="pn">Model adı</label><input id="pn" maxlength="80" placeholder="Örn. Yumuşak taban patik"></div>
+    <div class="row2">
+      <div class="field"><label for="pc">Kategori</label><select id="pc">${CATS.slice(1).map(c=>`<option>${c}</option>`).join("")}</select></div>
+      <div class="field"><label for="pp">Fiyat (so'm/çift)</label><input id="pp" maxlength="30" inputmode="numeric" placeholder="55 000"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label for="pm">Min. sipariş (çift)</label><input id="pm" maxlength="20" inputmode="numeric" placeholder="12"></div>
+      <div class="field"><label for="ps">Numaralar</label><input id="ps" maxlength="30" placeholder="17–21"></div>
+    </div>
+    <button class="btn" id="pub">Yayınla</button></div>`);
+  $("file").onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    $("sizeNote").textContent = "Fotoğraf hazırlanıyor…";
+    try{
+      draft = await makeVersions(f);
+      const d = $("drop"); d.querySelector("img")?.remove(); $("dropTxt")?.remove();
+      d.insertAdjacentHTML("afterbegin", `<img src="${URL.createObjectURL(draft.large)}" alt="">`);
+      $("sizeNote").textContent = `${(f.size/1048576).toFixed(1)} MB → ${Math.round(draft.large.size/1024)} KB (büyük) + ${Math.round(draft.small.size/1024)} KB (küçük)`;
+    }catch(err){ $("sizeNote").textContent = err.message; }
+  };
+  $("pub").onclick = async () => {
+    const name = $("pn").value.trim();
+    if (!draft) { toast("Önce fotoğraf seç"); return; }
+    if (!name) { toast("Model adını yaz"); return; }
+    const fd = new FormData();
+    fd.append("action","add_product"); fd.append("name",name); fd.append("category",$("pc").value);
+    fd.append("price",$("pp").value.trim()); fd.append("min_order",$("pm").value.trim()); fd.append("sizes",$("ps").value.trim());
+    fd.append("w",draft.w); fd.append("h",draft.h);
+    fd.append("small",draft.small,"s.jpg"); fd.append("large",draft.large,"l.jpg");
+    const b = $("pub"); b.disabled = true; b.textContent = "Yükleniyor…";
+    try { await api(fd); closeSheet(); toast("Model yayında"); renderProfile(); loadFeed(true); }
+    catch (e) { toast(e.message); b.disabled = false; b.textContent = "Tekrar dene"; }
+  };
+}
+function confirmBox(text){ return new Promise(res => { if (tg && tg.showConfirm) tg.showConfirm(text, ok => res(!!ok)); else res(true); }); }
+async function deleteProduct(id){
+  if (!(await confirmBox("Bu model silinsin mi?"))) return;
+  const fd = new FormData(); fd.append("action","delete_product"); fd.append("id",id);
+  try { await api(fd); toast("Model silindi"); renderProfile(); loadFeed(true); } catch (e) { toast(e.message); }
+}
+
+// ---------- Olaylar ----------
+document.addEventListener("click", e => {
+  const fav = e.target.closest("[data-fav]");
+  if (fav){ e.stopPropagation(); haptic(); const id = fav.dataset.fav;
+    favs = favs.includes(id) ? favs.filter(x=>x!==id) : [...favs, id]; saveFavs();
+    document.querySelectorAll(`[data-fav="${id}"]`).forEach(b => { const on = favs.includes(id); b.classList.toggle("on",on); b.querySelector("svg").setAttribute("fill", on?"currentColor":"none"); });
+    return; }
+  const del = e.target.closest("[data-del]"); if (del){ deleteProduct(del.dataset.del); return; }
+  const op = e.target.closest("[data-open]"); if (op){ openProduct(op.dataset.open); return; }
+  const pin = e.target.closest(".pin"); if (pin){ openProduct(pin.dataset.id); return; }
+  const ch = e.target.closest(".chip"); if (ch){ cat = ch.dataset.c; renderChips(); loadFeed(true); return; }
+});
+const tabs = ["home","search","profile"];
+function go(t){
+  tabs.forEach(x => { $("v-"+x).hidden = x!==t; $("t-"+x).classList.toggle("on", x===t); });
+  $("chips").hidden = t !== "home"; scrollTo(0,0);
+  if (t==="search") renderSearch();
+  if (t==="profile") renderProfile();
+}
+tabs.forEach(t => $("t-"+t).onclick = () => go(t));
+
+loadFavs().then(() => { renderChips(); loadFeed(true); });
+</script>
+</body>
+</html>
